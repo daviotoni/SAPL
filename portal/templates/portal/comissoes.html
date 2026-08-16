@@ -1,0 +1,23 @@
+{% extends 'portal/base.html' %}
+{% block titulo %}Comissões{% endblock %}
+{% block conteudo %}
+<div class="cartao">
+  <h2>Comissões</h2>
+  <table>
+    <tr><th>Comissão</th><th>Tipo</th><th>Composição</th></tr>
+    {% for c in comissoes %}
+    <tr>
+      <td>{{ c.nome }}</td>
+      <td>{{ c.get_tipo_display }}</td>
+      <td>
+        {% for m in c.membros.all %}
+        {{ m.vereador }} ({{ m.get_cargo_display }}){% if not forloop.last %}; {% endif %}
+        {% empty %}—{% endfor %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">Nenhuma comissão cadastrada.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'portal/base.html' %}
+{% block titulo %}{{ sessao }}{% endblock %}
+{% block conteudo %}
+<div class="cartao">
+  <h2>{{ sessao }}</h2>
+  <p>
+    <span class="rotulo">{{ sessao.get_tipo_display }}</span>
+    <span class="rotulo">{{ sessao.sessao_legislativa }}</span>
+    {% if sessao.hora_inicio %}<span class="rotulo">{{ sessao.hora_inicio|time:'H:i' }}{% if sessao.hora_fim %} — {{ sessao.hora_fim|time:'H:i' }}{% endif %}</span>{% endif %}
+  </p>
+  {% if sessao.ata_arquivo %}<p><a href="{{ sessao.ata_arquivo.url }}">Ata da sessão</a></p>{% endif %}
+  {% if sessao.resumo %}<p>{{ sessao.resumo }}</p>{% endif %}
+</div>
+
+<div class="cartao">
+  <h2>Pauta</h2>
+  {% regroup sessao.pauta.all by get_fase_display as fases %}
+  {% for fase in fases %}
+  <h3>{{ fase.grouper }}</h3>
+  <table>
+    <tr><th>#</th><th>Matéria</th><th>Turno</th><th>Resultado</th><th>Placar</th></tr>
+    {% for item in fase.list %}
+    <tr>
+      <td>{{ item.ordem }}</td>
+      <td><a href="{% url 'portal:materia_detalhe' item.materia.pk %}">{{ item.materia }}</a>
+          — {{ item.materia.ementa|truncatechars:90 }}</td>
+      <td>{{ item.get_turno_display }}</td>
+      <td>{% if item.votacao %}{{ item.votacao.get_resultado_display }}
+          ({{ item.votacao.get_processo_display|lower }}){% else %}—{% endif %}</td>
+      <td>{% if item.votacao %}{% if item.votacao.unanime %}Unânime{% else %}{{ item.votacao.votos_sim }}×{{ item.votacao.votos_nao }}
+          ({{ item.votacao.abstencoes }} abst.){% endif %}{% else %}—{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% empty %}
+  <p>Pauta não cadastrada.</p>
+  {% endfor %}
+</div>
+
+{% for item in sessao.pauta.all %}
+{% if item.votacao and item.votacao.votos.all %}
+<div class="cartao">
+  <h2>Votação nominal — {{ item.materia }}</h2>
+  <table>
+    <tr><th>Vereador</th><th>Voto</th></tr>
+    {% for v in item.votacao.votos.all %}
+    <tr><td>{{ v.vereador }}</td><td>{{ v.get_voto_display }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endfor %}
+
+<div class="cartao">
+  <h2>Presenças</h2>
+  <div class="grade">
+    {% for p in sessao.presencas.all %}
+    <div class="cartao">{{ p.vereador }}<br>
+      <small>{% if p.presente %}Presente{% else %}Ausente{% if p.justificativa %} — {{ p.justificativa }}{% endif %}{% endif %}</small>
+    </div>
+    {% empty %}<p>Presenças não registradas.</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}

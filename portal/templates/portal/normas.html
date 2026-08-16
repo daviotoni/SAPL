@@ -1,0 +1,31 @@
+{% extends 'portal/base.html' %}
+{% block titulo %}Normas{% endblock %}
+{% block conteudo %}
+<div class="cartao">
+  <h2>Normas Jurídicas</h2>
+  <form class="busca" method="get">
+    <input type="text" name="q" value="{{ busca }}"
+           placeholder="Pesquisar na ementa…">
+    <button type="submit">Pesquisar</button>
+  </form>
+  <table>
+    <tr><th>Norma</th><th>Ementa</th><th>Situação</th><th>Publicação</th></tr>
+    {% for n in pagina %}
+    <tr>
+      <td>{{ n }}</td>
+      <td>{{ n.ementa|truncatechars:140 }}
+        {% if n.texto %}<br><a href="{{ n.texto.url }}">Texto integral</a>{% endif %}</td>
+      <td>{{ n.get_situacao_display }}</td>
+      <td>{{ n.data_publicacao|date:'d/m/Y'|default:'—' }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">Nenhuma norma encontrada.</td></tr>
+    {% endfor %}
+  </table>
+  <div class="paginacao">
+    {% if pagina.has_previous %}<a href="?pagina={{ pagina.previous_page_number }}&q={{ busca }}">&laquo; anterior</a>{% endif %}
+    <span>página {{ pagina.number }} de {{ pagina.paginator.num_pages }}</span>
+    {% if pagina.has_next %}<a href="?pagina={{ pagina.next_page_number }}&q={{ busca }}">próxima &raquo;</a>{% endif %}
+  </div>
+</div>
+{% endblock %}

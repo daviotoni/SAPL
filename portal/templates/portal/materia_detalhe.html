@@ -1,0 +1,77 @@
+{% extends 'portal/base.html' %}
+{% block titulo %}{{ materia }}{% endblock %}
+{% block conteudo %}
+<div class="cartao">
+  <h2>{{ materia }} — {{ materia.tipo.descricao }}</h2>
+  <p>{{ materia.ementa }}</p>
+  <p>
+    <span class="rotulo">Apresentação: {{ materia.data_apresentacao|date:'d/m/Y' }}</span>
+    <span class="rotulo">Regime: {{ materia.get_regime_display }}</span>
+    <span class="rotulo">{% if materia.em_tramitacao %}Em tramitação{% else %}Tramitação encerrada{% endif %}</span>
+    {% if materia.processo_numero %}
+    <span class="rotulo">Processo nº {{ materia.processo_numero }}/{{ materia.processo_ano }}</span>
+    {% endif %}
+  </p>
+  <p><strong>Autoria:</strong>
+    {% for a in materia.autores.all %}{{ a }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}
+  </p>
+  {% if materia.materia_origem %}
+  <p><strong>Origem:</strong>
+    <a href="{% url 'portal:materia_detalhe' materia.materia_origem.pk %}">{{ materia.materia_origem }}</a></p>
+  {% endif %}
+  {% if materia.texto %}
+  <p><a href="{{ materia.texto.url }}">Texto integral</a></p>
+  {% endif %}
+</div>
+
+{% if materia.analises_previas.all %}
+<div class="cartao">
+  <h2>Análises Prévias</h2>
+  <table>
+    <tr><th>Data</th><th>Conclusão</th><th>Responsável</th></tr>
+    {% for ap in materia.analises_previas.all %}
+    <tr>
+      <td>{{ ap.data|date:'d/m/Y' }}</td>
+      <td>{{ ap.get_conclusao_display }}</td>
+      <td>{{ ap.responsavel|default:'—' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+{% if materia.pareceres.all %}
+<div class="cartao">
+  <h2>Pareceres de Comissões</h2>
+  <table>
+    <tr><th>Comissão</th><th>Relator</th><th>Sentido</th><th>Data</th></tr>
+    {% for p in materia.pareceres.all %}
+    <tr>
+      <td>{{ p.comissao }}</td>
+      <td>{{ p.relator|default:'—' }}</td>
+      <td>{{ p.get_sentido_display }}</td>
+      <td>{{ p.data|date:'d/m/Y' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+
+<div class="cartao">
+  <h2>Tramitação</h2>
+  <table>
+    <tr><th>Data</th><th>De</th><th>Para</th><th>Status</th><th>Despacho</th></tr>
+    {% for t in materia.tramitacoes.all %}
+    <tr>
+      <td>{{ t.data|date:'d/m/Y' }}</td>
+      <td>{{ t.unidade_origem }}</td>
+      <td>{{ t.unidade_destino }}</td>
+      <td>{{ t.status }}</td>
+      <td>{{ t.despacho|default:'—' }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">Sem tramitações registradas.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

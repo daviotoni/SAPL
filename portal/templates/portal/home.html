@@ -1,0 +1,42 @@
+{% extends 'portal/base.html' %}
+{% block titulo %}Início{% endblock %}
+{% block conteudo %}
+<div class="cartao">
+  <h2>Transparência do Processo Legislativo</h2>
+  <p>Acompanhe as matérias em tramitação, as sessões plenárias, as
+  votações e a legislação do Município de Duque de Caxias.</p>
+</div>
+<div class="cartao">
+  <h2>Últimas matérias</h2>
+  {% if ultimas_materias %}
+  <table>
+    {% for m in ultimas_materias %}
+    <tr>
+      <td><a href="{% url 'portal:materia_detalhe' m.pk %}">{{ m }}</a></td>
+      <td>{{ m.ementa|truncatechars:120 }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}<p>Nenhuma matéria cadastrada ainda.</p>{% endif %}
+</div>
+<div class="cartao">
+  <h2>Sessões recentes</h2>
+  {% if proximas_sessoes %}
+  <table>
+    {% for s in proximas_sessoes %}
+    <tr><td><a href="{% url 'portal:sessao_detalhe' s.pk %}">{{ s }}</a></td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<p>Nenhuma sessão cadastrada ainda.</p>{% endif %}
+</div>
+<div class="cartao">
+  <h2>Normas recentes</h2>
+  {% if ultimas_normas %}
+  <table>
+    {% for n in ultimas_normas %}
+    <tr><td>{{ n }}</td><td>{{ n.ementa|truncatechars:120 }}</td></tr>
+    {% endfor %}
+  </table>
+  {% else %}<p>Nenhuma norma cadastrada ainda.</p>{% endif %}
+</div>
+{% endblock %}

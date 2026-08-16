@@ -1,0 +1,7 @@
+Django>=5.2,<6
+djangorestframework>=3.15
+django-filter>=24.0
+# Produção (opcional):
+# psycopg[binary]>=3.2      # PostgreSQL
+# gunicorn>=23.0
+# whitenoise>=6.7

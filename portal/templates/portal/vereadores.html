@@ -1,0 +1,31 @@
+{% extends 'portal/base.html' %}
+{% block titulo %}Vereadores{% endblock %}
+{% block conteudo %}
+{% if mesa %}
+<div class="cartao">
+  <h2>Mesa Diretora{% if legislatura %} — {{ legislatura }}{% endif %}</h2>
+  <table>
+    <tr><th>Cargo</th><th>Vereador</th><th>Período</th></tr>
+    {% for c in mesa %}
+    <tr>
+      <td>{{ c.cargo }}</td>
+      <td>{{ c.vereador }}</td>
+      <td>{{ c.data_inicio|date:'Y' }}{% if c.data_fim %}–{{ c.data_fim|date:'Y' }}{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+<div class="cartao">
+  <h2>Vereadores</h2>
+  <div class="grade">
+    {% for v in vereadores %}
+    <div class="cartao">
+      <strong>{{ v.nome_parlamentar }}</strong><br>
+      <small>{{ v.nome_civil }}</small><br>
+      <small>{{ v.partido|default:'Partido não informado' }}</small>
+    </div>
+    {% empty %}<p>Nenhum vereador cadastrado.</p>{% endfor %}
+  </div>
+</div>
+{% endblock %}

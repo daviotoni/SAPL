@@ -1,4 +1,25 @@
-# Estudo do SAPL — Sistema de Apoio ao Processo Legislativo
+# SAPL-DC — Sistema de Apoio ao Processo Legislativo da CMDC
+
+Este repositório contém duas coisas complementares:
+
+1. **SAPL-DC** — sistema novo (Django 5.2), inspirado na modelagem do SAPL/Interlegis e
+   **adaptado ao processo legislativo da Câmara Municipal de Duque de Caxias** (Regimento
+   Interno — Resolução nº 1.835/2000 — e Lei Orgânica), incluindo o fluxo local
+   **APL → Análise Prévia da Procuradoria → PL** e votação nominal com voto individual.
+   Ver [docs/10-sapldc.md](docs/10-sapldc.md).
+
+   ```bash
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install -r requirements.txt
+   python manage.py migrate && python manage.py seed_cmdc
+   python manage.py createsuperuser && python manage.py runserver
+   ```
+
+2. **Estudo do SAPL original** (docs 01–09), que fundamentou as decisões de modelagem.
+
+---
+
+## O estudo que deu origem ao sistema
 
 Material de estudo sobre o **SAPL**, software livre desenvolvido pelo **Programa Interlegis
 (Senado Federal)** para informatizar o processo legislativo de Câmaras Municipais e
@@ -43,6 +64,7 @@ Três coisas o tornam tecnicamente interessante:
 | 07 | [API REST e interoperabilidade](docs/07-api-interoperabilidade.md) | drfautoapi, LexML/OAI-PMH, Solr, e-Cidadania |
 | 08 | [Subindo um ambiente](docs/08-ambiente-local.md) | Docker Compose, ambiente de desenvolvimento |
 | 09 | [Roteiro de estudo](docs/09-roteiro-de-estudo.md) | Ordem sugerida de leitura do código, exercícios |
+| 10 | [SAPL-DC](docs/10-sapldc.md) | O sistema da CMDC: decisões, mapa regimental, dados, como rodar |
 
 ## Como usar este material
 

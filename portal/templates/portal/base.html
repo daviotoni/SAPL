@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titulo %}SAPL-DC{% endblock %} — {{ casa.sigla|default:'CMDC' }}</title>
+<style>
+:root{--azul:#1a3a6b;--azul2:#245091;--cinza:#f4f6f9;--borda:#d8dee8;--texto:#22303f}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--texto);background:var(--cinza)}
+header{background:var(--azul);color:#fff;padding:1rem 1.5rem}
+header h1{margin:0;font-size:1.15rem}header p{margin:.2rem 0 0;font-size:.8rem;opacity:.85}
+nav{background:var(--azul2);padding:0 1.5rem;display:flex;flex-wrap:wrap;gap:.25rem}
+nav a{color:#fff;text-decoration:none;padding:.6rem .8rem;font-size:.9rem;border-radius:4px 4px 0 0}
+nav a:hover{background:rgba(255,255,255,.15)}
+main{max-width:1080px;margin:1.5rem auto;padding:0 1rem}
+.cartao{background:#fff;border:1px solid var(--borda);border-radius:8px;padding:1.25rem;margin-bottom:1.25rem}
+h2{margin-top:0;color:var(--azul);font-size:1.2rem}
+h3{color:var(--azul2);font-size:1rem}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--borda);vertical-align:top}
+th{background:var(--cinza);font-weight:600}
+a{color:var(--azul2)}
+.rotulo{display:inline-block;background:var(--cinza);border:1px solid var(--borda);border-radius:12px;padding:.1rem .6rem;font-size:.75rem;margin-right:.3rem}
+.busca{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.busca input,.busca select{padding:.45rem .6rem;border:1px solid var(--borda);border-radius:6px;font-size:.9rem}
+.busca button{background:var(--azul);color:#fff;border:0;border-radius:6px;padding:.45rem 1rem;cursor:pointer}
+.paginacao{display:flex;gap:.75rem;justify-content:center;padding:.5rem;font-size:.9rem}
+footer{text-align:center;font-size:.75rem;color:#68788c;padding:1.5rem}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem}
+.grade .cartao{margin:0;padding:.9rem}
+@media (max-width:640px){nav{padding:0 .5rem}main{padding:0 .5rem}}
+</style>
+</head>
+<body>
+<header>
+  <h1>{{ casa.nome|default:'Câmara Municipal de Duque de Caxias' }}</h1>
+  <p>SAPL-DC — Sistema de Apoio ao Processo Legislativo</p>
+</header>
+<nav>
+  <a href="{% url 'portal:home' %}">Início</a>
+  <a href="{% url 'portal:materias' %}">Matérias</a>
+  <a href="{% url 'portal:sessoes' %}">Sessões Plenárias</a>
+  <a href="{% url 'portal:normas' %}">Normas Jurídicas</a>
+  <a href="{% url 'portal:vereadores' %}">Vereadores</a>
+  <a href="{% url 'portal:comissoes' %}">Comissões</a>
+  <a href="/api/">API</a>
+  <a href="/admin/">Administração</a>
+</nav>
+<main>{% block conteudo %}{% endblock %}</main>
+<footer>
+  {{ casa.endereco }}{% if casa.telefone %} — {{ casa.telefone }}{% endif %}<br>
+  SAPL-DC — software livre inspirado no SAPL (Interlegis/Senado Federal)
+</footer>
+</body>
+</html>

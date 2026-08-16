@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sapldc
+      POSTGRES_USER: sapldc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sapldc}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    restart: unless-stopped
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py seed_cmdc &&
+             python manage.py collectstatic --noinput &&
+             gunicorn sapldc.wsgi -b 0.0.0.0:8000"
+    environment:
+      DEBUG: 'False'
+      SECRET_KEY: ${SECRET_KEY:?defina SECRET_KEY no .env}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost}
+      POSTGRES_DB: sapldc
+      POSTGRES_USER: sapldc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sapldc}
+      POSTGRES_HOST: db
+    volumes:
+      - media_data:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  media_data:
